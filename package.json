@@ -1,0 +1,45 @@
+{
+	"name": "nextjs-typescript-template",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/mauriciomutte/nextjs-typescript-template.git",
+	"author": "Mauricio Mutte <mauriciomutte.mm@gmail.com>",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"type-check": "tsc",
+		"postinstall": "husky install"
+	},
+	"lint-staged": {
+		"**/*.ts?(x)": [
+			"eslint --ignore-path .gitignore --fix",
+			"prettier --ignore-path .gitignore --write"
+		]
+	},
+	"dependencies": {
+		"next": "13.0.5",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "17.3.0",
+		"@commitlint/config-conventional": "17.3.0",
+		"@types/node": "18.11.10",
+		"@types/react": "18.0.25",
+		"@types/react-dom": "18.0.9",
+		"@typescript-eslint/eslint-plugin": "5.45.0",
+		"@typescript-eslint/parser": "5.45.0",
+		"eslint": "8.28.0",
+		"eslint-config-next": "13.0.5",
+		"eslint-config-prettier": "8.5.0",
+		"eslint-plugin-prettier": "4.2.1",
+		"husky": "8.0.2",
+		"lint-staged": "13.0.4",
+		"prettier": "2.8.0",
+		"typescript": "4.9.3"
+	}
+}
