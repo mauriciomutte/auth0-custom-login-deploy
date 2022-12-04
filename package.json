@@ -1,8 +1,8 @@
 {
-	"name": "nextjs-typescript-template",
+	"name": "pipeplayground",
 	"version": "1.0.0",
 	"main": "index.js",
-	"repository": "https://github.com/mauriciomutte/nextjs-typescript-template.git",
+	"repository": "https://github.com/mauriciomutte/pipeplayground.git",
 	"author": "Mauricio Mutte <mauriciomutte.mm@gmail.com>",
 	"license": "MIT",
 	"private": true,
