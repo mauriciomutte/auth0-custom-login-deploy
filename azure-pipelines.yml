@@ -31,7 +31,11 @@ steps:
     displayName: "pnpm install and build"
   
   - script: |
-      export $(cat .env | egrep AUTH0_ | xargs) && pnpm deploy:auth0
+      export $(cat $env | egrep AUTH0_ | xargs) && pnpm deploy:auth0
+    env:
+      AUTH0_DOMAIN: $(AUTH0_DOMAIN)
+      AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
+      AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
     displayName: "Deploy login HTML to Auth0"
     
   - task: S3Upload@1
@@ -41,4 +45,3 @@ steps:
       sourceFolder: '$(Build.SourcesDirectory)/out'
       globExpressions: '_next/**'
       filesAcl: 'public-read'
-
