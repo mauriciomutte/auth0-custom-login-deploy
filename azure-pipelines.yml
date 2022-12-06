@@ -34,6 +34,7 @@ steps:
     inputs:
       regionName: 'us-east-1'
       bucketName: 'dev-mutte0-idp'
-      globExpressions: '$(Build.SourcesDirectory)/out/_next/**'
+      sourceFolder: '$(Build.SourcesDirectory)/out'
+      globExpressions: '/_next/**'
       filesAcl: 'public-read'
 
