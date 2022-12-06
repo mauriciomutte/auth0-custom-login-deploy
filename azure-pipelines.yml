@@ -29,6 +29,10 @@ steps:
       pnpm install
       pnpm run build
     displayName: "pnpm install and build"
+  
+  - script: |
+      export $(cat .env | egrep AUTH0_ | xargs) && pnpm deploy:auth0
+    displayName: "Deploy login HTML to Auth0"
     
   - task: S3Upload@1
     inputs:
