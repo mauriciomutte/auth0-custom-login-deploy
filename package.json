@@ -12,7 +12,8 @@
 		"start": "next start",
 		"lint": "next lint",
 		"type-check": "tsc",
-		"postinstall": "husky install"
+		"postinstall": "husky install",
+		"deploy:auth0": "a0deploy import --config ./configs/sandbox.json --input_file ./tenant.yaml"
 	},
 	"lint-staged": {
 		"**/*.ts?(x)": [
