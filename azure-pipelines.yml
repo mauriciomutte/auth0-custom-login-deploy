@@ -36,11 +36,11 @@ stages:
             displayName: 'Copy files'
             inputs:
               contents: 'out/**'
-              targetFolder: '$(Build.BinariesDirectory)/app'
+              targetFolder: '$(Build.BinariesDirectory)'
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact app files"
             inputs:
-              PathtoPublish: "$(Build.BinariesDirectory)/app"
+              PathtoPublish: "$(Build.BinariesDirectory)/out"
             condition: succeededOrFailed()
 
   - stage: upload_static_files
