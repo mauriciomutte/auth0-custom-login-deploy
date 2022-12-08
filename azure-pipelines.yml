@@ -49,9 +49,6 @@ stages:
       - job: upload_static_files
         displayName: Upload static files
         steps:
-          - script: |
-              cd $(Pipeline.Workspace) && ll
-            displayName: "List files"
           - task: S3Upload@1
             inputs:
               awsCredentials: 'AWS Pipes'
