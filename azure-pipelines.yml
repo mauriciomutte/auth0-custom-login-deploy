@@ -54,7 +54,7 @@ stages:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
-              sourceFolder: '$(Pipeline.Workspace)/out'
+              sourceFolder: '$(Pipeline.Workspace)'
               globExpressions: '_next/**'
               filesAcl: 'public-read'
 
