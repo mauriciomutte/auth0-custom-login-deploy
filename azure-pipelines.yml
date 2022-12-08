@@ -45,16 +45,21 @@ stages:
 
   - stage: upload_static_files
     dependsOn: build
+    condition: |
+      in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues')
     jobs:
       - job: upload_static_files
         displayName: Upload static files
         steps:
+          - checkout: none
+          - download: current
+            artifact: drop
           - task: S3Upload@1
             inputs:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
-              sourceFolder: '$(Build.SourcesDirectory)/out'
+              sourceFolder: '$(Pipeline.Workspace)/drop'
               globExpressions: '_next/**'
               filesAcl: 'public-read'
 
