@@ -49,12 +49,15 @@ stages:
       - job: upload_static_files
         displayName: Upload static files
         steps:
+          - script: |
+              cd $(Pipeline.Workspace) && ll
+            displayName: "List files"
           - task: S3Upload@1
             inputs:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
-              sourceFolder: '$(Pipeline.Workspace)/drop/out'
+              sourceFolder: '$(Pipeline.Workspace)/out'
               globExpressions: '_next/**'
               filesAcl: 'public-read'
 
