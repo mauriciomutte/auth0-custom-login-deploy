@@ -32,8 +32,18 @@ stages:
               pnpm install
               pnpm run build
             displayName: "pnpm install and build"
+          - task: CopyFiles@2
+            displayName: 'Copy files'
+            inputs:
+              targetFolder: '$(Build.BinariesDirectory)/app'
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact app files"
+            inputs:
+              PathtoPublish: "$(Build.BinariesDirectory)/app"
+            condition: succeededOrFailed()
 
   - stage: upload_static_files
+    dependsOn: build
     jobs:
       - job: upload_static_files
         displayName: Upload static files
@@ -42,7 +52,7 @@ stages:
             inputs:
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
-              sourceFolder: '$(Build.SourcesDirectory)/out'
+              sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
               filesAcl: 'public-read'
 
