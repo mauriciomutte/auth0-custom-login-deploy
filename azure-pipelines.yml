@@ -12,36 +12,50 @@ pool:
 variables:
   pnpm_config_cache: $(Pipeline.Workspace)/.pnpm-store
 
-steps:
+stages:
+  - stage: build
+    jobs:
+      - job: Build
+        displayName: Build
+        steps:
+          - task: Cache@2
+            inputs:
+              key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
+              path: $(pnpm_config_cache)
+            displayName: Cache pnpm
 
-  - task: Cache@2
-    inputs:
-      key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
-      path: $(pnpm_config_cache)
-    displayName: Cache pnpm
+          - script: |
+              curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+              pnpm config set store-dir $(pnpm_config_cache)
+            displayName: "Setup pnpm"
+          - script: |
+              pnpm install
+              pnpm run build
+            displayName: "pnpm install and build"
 
-  - script: |
-      curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
-      pnpm config set store-dir $(pnpm_config_cache)
-    displayName: "Setup pnpm"
+  - stage: upload_static_files
+    jobs:
+      - job: upload_static_files
+        displayName: Upload static files
+        steps:
+          - task: S3Upload@1
+            inputs:
+              regionName: 'us-east-1'
+              bucketName: 'dev-mutte0-idp'
+              sourceFolder: '$(Build.SourcesDirectory)/out'
+              globExpressions: '_next/**'
+              filesAcl: 'public-read'
 
-  - script: |
-      pnpm install
-      pnpm run build
-    displayName: "pnpm install and build"
-  
-  - script: |
-      pnpm deploy:auth0
-    env:
-      AUTH0_DOMAIN: $(AUTH0_DOMAIN)
-      AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
-      AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
-    displayName: "Deploy login HTML to Auth0"
-    
-  - task: S3Upload@1
-    inputs:
-      regionName: 'us-east-1'
-      bucketName: 'dev-mutte0-idp'
-      sourceFolder: '$(Build.SourcesDirectory)/out'
-      globExpressions: '_next/**'
-      filesAcl: 'public-read'
+  - stage: deploy_prd
+    jobs:
+      - deployment: Deploy
+        environment: "prd"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+                - task: NodeTool@0
+                  displayName: "Use Node 16.x"
+                  inputs:
+                    versionSpec: '16.x'
