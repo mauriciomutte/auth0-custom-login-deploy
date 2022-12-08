@@ -35,6 +35,7 @@ stages:
           - task: CopyFiles@2
             displayName: 'Copy files'
             inputs:
+              contents: 'out/**'
               targetFolder: '$(Build.BinariesDirectory)/app'
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact app files"
