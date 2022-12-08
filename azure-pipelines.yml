@@ -51,6 +51,7 @@ stages:
         steps:
           - task: S3Upload@1
             inputs:
+              awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
