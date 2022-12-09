@@ -38,11 +38,11 @@ stages:
               Contents: |
                 **\**
                 !**\node_modules\**
-              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              TargetFolder: '$(Build.BinariesDirectory)'
           - task: PublishBuildArtifacts@1
             condition: succeededOrFailed()
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              PathtoPublish: '$(Build.BinariesDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
 
