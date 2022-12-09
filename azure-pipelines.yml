@@ -33,16 +33,16 @@ stages:
               pnpm run build
             displayName: "pnpm install and build"
           - task: CopyFiles@2
-            displayName: "Copy files"
             inputs:
+              SourceFolder: '$(Build.SourcesDirectory)'
               Contents: |
                 **\**
                 !**\node_modules\**
-              TargetFolder: '$(Build.BinariesDirectory)'
+              TargetFolder: '$(Build.BinariesDirectory)/app'
           - task: PublishBuildArtifacts@1
             condition: succeededOrFailed()
             inputs:
-              PathtoPublish: '$(Build.BinariesDirectory)'
+              PathtoPublish: '$(Build.BinariesDirectory)/app'
               ArtifactName: 'drop'
               publishLocation: 'Container'
 
