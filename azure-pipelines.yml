@@ -38,13 +38,12 @@ stages:
               Contents: |
                 **\**
                 !**\node_modules\**
-              TargetFolder: '$(Build.BinariesDirectory)/app'
+              TargetFolder: '$(build.artifactstagingdirectory)'
           - task: PublishBuildArtifacts@1
             condition: succeededOrFailed()
             inputs:
-              PathtoPublish: '$(Build.BinariesDirectory)/app'
+              PathtoPublish: '$(build.artifactstagingdirectory)'
               ArtifactName: 'drop'
-              publishLocation: 'Container'
 
   - stage: upload_static_files
     dependsOn: build
