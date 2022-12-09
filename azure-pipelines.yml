@@ -36,8 +36,8 @@ stages:
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
               Contents: |
-                **\**
-                !**\node_modules\**
+                **
+                !**/node_modules/**
               TargetFolder: '$(build.artifactstagingdirectory)'
           - task: PublishBuildArtifacts@1
             condition: succeededOrFailed()
