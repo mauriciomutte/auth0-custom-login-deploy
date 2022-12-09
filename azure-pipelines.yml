@@ -66,10 +66,83 @@ stages:
               targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
 
+  - stage: deploy_dev
+    dependsOn: upload_static_files
+    condition: |
+      and(
+        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        contains(variables['Build.SourceBranch'], 'refs/heads/develop')
+      )
+    jobs:
+      - deployment: Deploy
+        environment: "dev"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+                - task: NodeTool@0
+                  displayName: "Use Node 16.x"
+                  inputs:
+                    versionSpec: '16.x'
+
+                - script: |
+                    curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+                    pnpm config set store-dir $(pnpm_config_cache)
+                  displayName: "Setup pnpm"
+
+                - script: "cd $(Pipeline.Workspace)/drop && pnpm install"
+                  displayName: "pnpm install"
+
+                - script: "cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0"
+                  displayName: "Deploy HTML in Auth0"
+                  env:
+                    AUTH0_DOMAIN: $(AUTH0_DOMAIN)
+                    AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
+                    AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
+
+  - stage: deploy_qa
+    dependsOn: upload_static_files
+    condition: |
+      and(
+        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        contains(variables['Build.SourceBranch'], 'refs/heads/release/qa')
+      )
+    jobs:
+      - deployment: Deploy
+        environment: "qa"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+                - task: NodeTool@0
+                  displayName: "Use Node 16.x"
+                  inputs:
+                    versionSpec: '16.x'
+
+                - script: |
+                    curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
+                    pnpm config set store-dir $(pnpm_config_cache)
+                  displayName: "Setup pnpm"
+
+                - script: "cd $(Pipeline.Workspace)/drop && pnpm install"
+                  displayName: "pnpm install"
+
+                - script: "cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0"
+                  displayName: "Deploy HTML in Auth0"
+                  env:
+                    AUTH0_DOMAIN: $(AUTH0_DOMAIN)
+                    AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
+                    AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
+
   - stage: deploy_prd
     dependsOn: upload_static_files
     condition: |
-      in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues')
+      and(
+        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        contains(variables['Build.SourceBranch'], 'refs/heads/main')
+      )
     jobs:
       - deployment: Deploy
         environment: "prd"
@@ -97,4 +170,3 @@ stages:
                     AUTH0_DOMAIN: $(AUTH0_DOMAIN)
                     AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
                     AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
-                  
