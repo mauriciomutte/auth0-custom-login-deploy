@@ -11,6 +11,8 @@ pool:
 
 variables:
   pnpm_config_cache: $(Pipeline.Workspace)/.pnpm-store
+  STATIC_CDN_URI: $(STATIC_CDN_URI)
+  BRANCH_NAME: $(Build.SourceBranchName)
 
 stages:
   - stage: build
