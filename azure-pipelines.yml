@@ -4,7 +4,11 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+      - main
+      - develop
+      - release/qa
 
 pool:
   vmImage: ubuntu-latest
@@ -28,11 +32,11 @@ stages:
           - script: |
               curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
               pnpm config set store-dir $(pnpm_config_cache)
-            displayName: "Setup pnpm"
+            displayName: 'Setup pnpm'
           - script: |
               pnpm install
               pnpm run build
-            displayName: "pnpm install and build"
+            displayName: 'pnpm install and build'
           - task: CopyFiles@2
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
@@ -76,27 +80,27 @@ stages:
       )
     jobs:
       - deployment: Deploy
-        environment: "dev"
+        environment: 'dev'
         strategy:
           runOnce:
             deploy:
               steps:
                 - checkout: none
                 - task: NodeTool@0
-                  displayName: "Use Node 16.x"
+                  displayName: 'Use Node 16.x'
                   inputs:
                     versionSpec: '16.x'
 
                 - script: |
                     curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
                     pnpm config set store-dir $(pnpm_config_cache)
-                  displayName: "Setup pnpm"
+                  displayName: 'Setup pnpm'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm install"
-                  displayName: "pnpm install"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm install'
+                  displayName: 'pnpm install'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0"
-                  displayName: "Deploy HTML in Auth0"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0'
+                  displayName: 'Deploy HTML in Auth0'
                   env:
                     AUTH0_DOMAIN: $(AUTH0_DOMAIN)
                     AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
@@ -111,27 +115,27 @@ stages:
       )
     jobs:
       - deployment: Deploy
-        environment: "qa"
+        environment: 'qa'
         strategy:
           runOnce:
             deploy:
               steps:
                 - checkout: none
                 - task: NodeTool@0
-                  displayName: "Use Node 16.x"
+                  displayName: 'Use Node 16.x'
                   inputs:
                     versionSpec: '16.x'
 
                 - script: |
                     curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
                     pnpm config set store-dir $(pnpm_config_cache)
-                  displayName: "Setup pnpm"
+                  displayName: 'Setup pnpm'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm install"
-                  displayName: "pnpm install"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm install'
+                  displayName: 'pnpm install'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0"
-                  displayName: "Deploy HTML in Auth0"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0'
+                  displayName: 'Deploy HTML in Auth0'
                   env:
                     AUTH0_DOMAIN: $(AUTH0_DOMAIN)
                     AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
@@ -146,27 +150,27 @@ stages:
       )
     jobs:
       - deployment: Deploy
-        environment: "prd"
+        environment: 'prd'
         strategy:
           runOnce:
             deploy:
               steps:
                 - checkout: none
                 - task: NodeTool@0
-                  displayName: "Use Node 16.x"
+                  displayName: 'Use Node 16.x'
                   inputs:
                     versionSpec: '16.x'
 
                 - script: |
                     curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@7
                     pnpm config set store-dir $(pnpm_config_cache)
-                  displayName: "Setup pnpm"
+                  displayName: 'Setup pnpm'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm install"
-                  displayName: "pnpm install"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm install'
+                  displayName: 'pnpm install'
 
-                - script: "cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0"
-                  displayName: "Deploy HTML in Auth0"
+                - script: 'cd $(Pipeline.Workspace)/drop && pnpm deploy:auth0'
+                  displayName: 'Deploy HTML in Auth0'
                   env:
                     AUTH0_DOMAIN: $(AUTH0_DOMAIN)
                     AUTH0_CLIENT_ID: $(AUTH0_CLIENT_ID)
