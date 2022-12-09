@@ -33,10 +33,12 @@ stages:
               pnpm run build
             displayName: "pnpm install and build"
           - task: CopyFiles@2
-            displayName: 'Copy files'
+            displayName: "Copy files"
             inputs:
-              contents: 'out/**'
-              targetFolder: '$(Build.BinariesDirectory)'
+              Contents: |
+                **\**
+                !**\node_modules\**
+              TargetFolder: '$(Build.BinariesDirectory)'
           - task: PublishBuildArtifacts@1
             displayName: "Publish Artifact app files"
             inputs:
@@ -59,7 +61,7 @@ stages:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
-              sourceFolder: '$(Pipeline.Workspace)/drop'
+              sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
               filesAcl: 'public-read'
 
