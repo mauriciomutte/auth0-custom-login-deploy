@@ -63,6 +63,7 @@ stages:
               bucketName: 'dev-mutte0-idp'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
+              targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
 
   - stage: deploy_prd
