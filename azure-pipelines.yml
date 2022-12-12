@@ -54,7 +54,7 @@ stages:
     dependsOn: build
     condition: |
       and(
-        in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues')
+        in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues'),
         ne(variables['Build.Reason'], 'PullRequest')
       )
     jobs:
