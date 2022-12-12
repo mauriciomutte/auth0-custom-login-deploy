@@ -53,7 +53,10 @@ stages:
   - stage: upload_static_files
     dependsOn: build
     condition: |
-      in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues')
+      and(
+        in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues')
+        ne(variables['Build.Reason'], 'PullRequest')
+      )
     jobs:
       - job: upload_static_files
         displayName: Upload static files
