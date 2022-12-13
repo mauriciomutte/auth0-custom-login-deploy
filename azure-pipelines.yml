@@ -23,15 +23,11 @@ stages:
       - job: Build
         displayName: Build
         steps:
-          - task: Cache@2
+          - task: NodeTool@0
+            displayName: 'Use Node 16.x'
             inputs:
-              key: 'yarn | "$(Agent.OS)" | yarn.lock'
-              restoreKeys: |
-                yarn | "$(Agent.OS)"
-                yarn
-              path: $(YARN_CACHE_FOLDER)
-            displayName: Cache Yarn packages
-
+              versionSpec: '16.x'
+        
           - script: yarn --frozen-lockfile
             displayName: 'Yarn install package'
           
