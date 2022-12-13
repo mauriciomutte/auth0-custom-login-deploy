@@ -23,26 +23,20 @@ stages:
       - job: Build
         displayName: Build
         steps:
-          - task: Yarn@3
-            inputs:
-              arguments: 'config set cache-folder $(yarnCacheFolder)'
-            displayName: Set Yarn cache folder
-
           - task: Cache@2
             inputs:
               key: 'yarn | "$(Agent.OS)" | yarn.lock'
               restoreKeys: |
                 yarn | "$(Agent.OS)"
                 yarn
-              path: $(yarnCacheFolder)
-            displayName: Cache dependencies
+              path: $(YARN_CACHE_FOLDER)
+            displayName: Cache Yarn packages
 
-          - task: Yarn@3
-            displayName: 'Install dependencies'
-            inputs:
-              arguments: '--frozen-lockfile'
-              customRegistry: useFeed
-              customFeed: '$(npmRegistry)'
+          - script: yarn --frozen-lockfile
+            displayName: 'Yarn install package'
+          
+          - script: yarn build
+            displayName: 'Run build'
 
           - task: CopyFiles@2
             inputs:
