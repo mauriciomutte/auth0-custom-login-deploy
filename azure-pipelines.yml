@@ -58,14 +58,26 @@ stages:
       - job: upload_static_files
         displayName: Upload static files
         steps:
-          - checkout: none
-          - download: current
-            artifact: drop
           - task: S3Upload@1
+            condition: contains(variables['Build.SourceBranch'], 'refs/heads/release/main')
             inputs:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
               bucketName: 'dev-mutte0-idp'
+              sourceFolder: '$(Pipeline.Workspace)/drop/out'
+              globExpressions: '_next/**'
+              targetFolder: '$(Build.SourceBranchName)'
+              filesAcl: 'public-read'
+          - task: S3Upload@1
+            condition: |
+              or(
+                contains(variables['Build.SourceBranch'], 'refs/heads/release/qa'),
+                contains(variables['Build.SourceBranch'], 'refs/heads/release/develop')
+              )
+            inputs:
+              awsCredentials: 'AWS Pipes'
+              regionName: 'us-east-1'
+              bucketName: 'dev-mutte0-idp-dev'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
               targetFolder: '$(Build.SourceBranchName)'
