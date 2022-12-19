@@ -55,11 +55,11 @@ stages:
         ne(variables['Build.Reason'], 'PullRequest')
       )
     jobs:
-      - job: upload_static_files
-        displayName: Upload static files
+      - job: upload_static_files_prd
+        displayName: Upload static files in PROD
+        condition: contains(variables['Build.SourceBranch'], 'refs/heads/release/main')
         steps:
           - task: S3Upload@1
-            condition: contains(variables['Build.SourceBranch'], 'refs/heads/release/main')
             inputs:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
@@ -68,12 +68,15 @@ stages:
               globExpressions: '_next/**'
               targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
+      - job: upload_static_files_dev
+        displayName: Upload static files in DEV
+        condition: |
+          or(
+            contains(variables['Build.SourceBranch'], 'refs/heads/release/qa'),
+            contains(variables['Build.SourceBranch'], 'refs/heads/release/develop')
+          )
+        steps:
           - task: S3Upload@1
-            condition: |
-              or(
-                contains(variables['Build.SourceBranch'], 'refs/heads/release/qa'),
-                contains(variables['Build.SourceBranch'], 'refs/heads/release/develop')
-              )
             inputs:
               awsCredentials: 'AWS Pipes'
               regionName: 'us-east-1'
