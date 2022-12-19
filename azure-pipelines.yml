@@ -26,7 +26,7 @@ stages:
     displayName: Lint, tests and code quality
     jobs:
       - job: build
-        steps: 
+        steps:
           - task: NodeTool@0
             displayName: 'Use Node 16.x'
             inputs:
@@ -34,11 +34,11 @@ stages:
 
           - script: yarn --frozen-lockfile
             displayName: 'Yarn install package'
-          
+
           - script: yarn build
             displayName: 'Run build'
       - job: lint
-        steps: 
+        steps:
           - script: yarn lint
             displayName: 'Run lint'
 
@@ -47,7 +47,7 @@ stages:
     displayName: Build and upload statics
     jobs:
       - job: build
-        displayName: Build
+        displayName: Build and export
         steps:
           - task: NodeTool@0
             displayName: 'Use Node 16.x'
@@ -55,8 +55,8 @@ stages:
               versionSpec: '16.x'
           - script: yarn --frozen-lockfile
             displayName: 'Yarn install package'
-          - script: yarn build
-            displayName: 'Run build'
+          - script: yarn build && yarn export
+            displayName: 'Run build and export'
           - task: CopyFiles@2
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
