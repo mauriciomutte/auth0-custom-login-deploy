@@ -43,6 +43,7 @@ stages:
             displayName: 'Run lint'
 
   - stage: build_and_upload
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: Build and upload statics
     jobs:
       - job: Build
