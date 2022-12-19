@@ -59,6 +59,9 @@ stages:
         displayName: Upload static files in PROD
         condition: contains(variables['Build.SourceBranchName'], 'main')
         steps:
+          - checkout: none
+          - download: current
+            artifact: drop
           - task: S3Upload@1
             inputs:
               awsCredentials: 'AWS Pipes'
@@ -76,6 +79,9 @@ stages:
             contains(variables['Build.SourceBranchName'], 'develop')
           )
         steps:
+          - checkout: none
+          - download: current
+            artifact: drop
           - task: S3Upload@1
             inputs:
               awsCredentials: 'AWS Pipes'
