@@ -42,7 +42,7 @@ stages:
           - script: yarn lint
             displayName: 'Run lint'
 
-  - stage: build
+  - stage: build_and_upload
     displayName: Build and upload statics
     jobs:
       - job: Build
@@ -107,10 +107,10 @@ stages:
 
   - stage: deploy_dev
     displayName: Deploy to Auth0 DEV
-    dependsOn: upload_static_files
+    dependsOn: build_and_upload
     condition: |
       and(
-        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        in(dependencies.build_and_upload.result, 'Succeeded', 'SucceededWithIssues'),
         contains(variables['Build.SourceBranch'], 'refs/heads/develop')
       )
     jobs:
@@ -138,10 +138,10 @@ stages:
 
   - stage: deploy_qa
     displayName: Deploy to Auth0 QA
-    dependsOn: upload_static_files
+    dependsOn: build_and_upload
     condition: |
       and(
-        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        in(dependencies.build_and_upload.result, 'Succeeded', 'SucceededWithIssues'),
         contains(variables['Build.SourceBranch'], 'refs/heads/release/qa')
       )
     jobs:
@@ -169,10 +169,10 @@ stages:
 
   - stage: deploy_prd
     displayName: Deploy to Auth0 PROD
-    dependsOn: upload_static_files
+    dependsOn: build_and_upload
     condition: |
       and(
-        in(dependencies.upload_static_files.result, 'Succeeded', 'SucceededWithIssues'),
+        in(dependencies.build_and_upload.result, 'Succeeded', 'SucceededWithIssues'),
         contains(variables['Build.SourceBranch'], 'refs/heads/main')
       )
     jobs:
