@@ -57,7 +57,7 @@ stages:
     jobs:
       - job: upload_static_files_prd
         displayName: Upload static files in PROD
-        condition: contains(variables['Build.SourceBranch'], 'refs/heads/release/main')
+        condition: contains(variables['Build.SourceBranchName'], 'main')
         steps:
           - task: S3Upload@1
             inputs:
@@ -72,8 +72,8 @@ stages:
         displayName: Upload static files in DEV
         condition: |
           or(
-            contains(variables['Build.SourceBranch'], 'refs/heads/release/qa'),
-            contains(variables['Build.SourceBranch'], 'refs/heads/release/develop')
+            contains(variables['Build.SourceBranchName'], 'qa'),
+            contains(variables['Build.SourceBranchName'], 'develop')
           )
         steps:
           - task: S3Upload@1
