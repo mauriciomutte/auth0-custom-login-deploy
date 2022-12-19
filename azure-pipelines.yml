@@ -10,6 +10,9 @@ trigger:
       - develop
       - release/qa
 
+pr:
+  - main
+
 pool:
   vmImage: ubuntu-latest
 
@@ -18,7 +21,29 @@ variables:
   BRANCH_NAME: $(Build.SourceBranchName)
 
 stages:
+  - stage: lint_and_tests
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    displayName: Lint, tests and code quality
+    jobs:
+      - job: build
+        steps: 
+          - task: NodeTool@0
+            displayName: 'Use Node 16.x'
+            inputs:
+              versionSpec: '16.x'
+
+          - script: yarn --frozen-lockfile
+            displayName: 'Yarn install package'
+          
+          - script: yarn build
+            displayName: 'Run build'
+      - job: lint
+        steps: 
+          - script: yarn lint
+            displayName: 'Run lint'
+
   - stage: build
+    displayName: Build and upload statics
     jobs:
       - job: Build
         displayName: Build
@@ -27,13 +52,10 @@ stages:
             displayName: 'Use Node 16.x'
             inputs:
               versionSpec: '16.x'
-        
           - script: yarn --frozen-lockfile
             displayName: 'Yarn install package'
-          
           - script: yarn build
             displayName: 'Run build'
-
           - task: CopyFiles@2
             inputs:
               SourceFolder: '$(Build.SourcesDirectory)'
@@ -46,16 +68,6 @@ stages:
             inputs:
               PathtoPublish: '$(build.artifactstagingdirectory)'
               ArtifactName: 'drop'
-
-  - stage: upload_static_files
-    displayName: Upload statics to Amazon S3
-    dependsOn: build
-    condition: |
-      and(
-        in(dependencies.build.result, 'Succeeded', 'SucceededWithIssues'),
-        ne(variables['Build.Reason'], 'PullRequest')
-      )
-    jobs:
       - job: upload_static_files_prd
         displayName: Upload static files in PROD
         condition: contains(variables['Build.SourceBranchName'], 'main')
