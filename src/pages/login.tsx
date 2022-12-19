@@ -13,7 +13,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<main className={styles.main}>
-				<h1 className={styles.title}>Welcome to Pipeplayground (with cache)</h1>
+				<h1 className={styles.title}>Welcome to Pipeplayground (new flow)</h1>
 			</main>
 		</div>
 	);
