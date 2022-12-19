@@ -48,6 +48,7 @@ stages:
               ArtifactName: 'drop'
 
   - stage: upload_static_files
+    displayName: Upload statics to Amazon S3
     dependsOn: build
     condition: |
       and(
@@ -93,6 +94,7 @@ stages:
               filesAcl: 'public-read'
 
   - stage: deploy_dev
+    displayName: Deploy to Auth0 DEV
     dependsOn: upload_static_files
     condition: |
       and(
@@ -123,6 +125,7 @@ stages:
                     AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
 
   - stage: deploy_qa
+    displayName: Deploy to Auth0 QA
     dependsOn: upload_static_files
     condition: |
       and(
@@ -153,6 +156,7 @@ stages:
                     AUTH0_CLIENT_SECRET: $(AUTH0_CLIENT_SECRET)
 
   - stage: deploy_prd
+    displayName: Deploy to Auth0 PROD
     dependsOn: upload_static_files
     condition: |
       and(
