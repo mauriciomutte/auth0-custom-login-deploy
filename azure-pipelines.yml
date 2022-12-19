@@ -46,7 +46,7 @@ stages:
     condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: Build and upload statics
     jobs:
-      - job: Build
+      - job: build
         displayName: Build
         steps:
           - task: NodeTool@0
@@ -71,6 +71,7 @@ stages:
               ArtifactName: 'drop'
       - job: upload_static_files_prd
         displayName: Upload static files in PROD
+        dependsOn: build
         condition: contains(variables['Build.SourceBranchName'], 'main')
         steps:
           - checkout: none
@@ -86,6 +87,7 @@ stages:
               targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
       - job: upload_static_files_dev
+        dependsOn: build
         displayName: Upload static files in DEV
         condition: |
           or(
