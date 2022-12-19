@@ -37,8 +37,7 @@ stages:
 
           - script: yarn build
             displayName: 'Run build'
-      - job: lint
-        steps:
+
           - script: yarn lint
             displayName: 'Run lint'
 
