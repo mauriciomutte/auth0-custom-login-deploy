@@ -82,7 +82,7 @@ stages:
       - job: upload_static_files_prd
         displayName: Upload static files in PROD
         dependsOn: build
-        condition: contains(variables['Build.SourceBranchName'], 'main')
+        condition: contains(variables['BRANCH_NAME'], 'main')
         steps:
           - checkout: none
           - download: current
@@ -94,15 +94,15 @@ stages:
               bucketName: 'dev-mutte0-idp'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(Build.SourceBranchName)'
+              targetFolder: '$(BRANCH_NAME)'
               filesAcl: 'public-read'
       - job: upload_static_files_dev
         dependsOn: build
         displayName: Upload static files in DEV
         condition: |
           or(
-            contains(variables['Build.SourceBranchName'], 'qa'),
-            contains(variables['Build.SourceBranchName'], 'develop')
+            contains(variables['BRANCH_NAME'], 'qa'),
+            contains(variables['BRANCH_NAME'], 'develop')
           )
         steps:
           - checkout: none
@@ -115,7 +115,7 @@ stages:
               bucketName: 'dev-mutte0-idp-dev'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(Build.SourceBranchName)'
+              targetFolder: '$(BRANCH_NAME)'
               filesAcl: 'public-read'
 
   - stage: deploy_dev
