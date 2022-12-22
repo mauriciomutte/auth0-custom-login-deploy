@@ -30,7 +30,7 @@ variables:
 
 stages:
   - stage: lint_and_tests
-    condition: eq(variables[$(BRANCH_NAME)], 'PullRequest')
+    condition: eq(BRANCH_NAME, 'PullRequest')
     displayName: Lint, tests and code quality
     jobs:
       - job: build
@@ -53,7 +53,7 @@ stages:
             displayName: 'Run test'
 
   - stage: build_and_upload
-    condition: ne(variables[$(BRANCH_NAME)], 'PullRequest')
+    condition: ne(BRANCH_NAME, 'PullRequest')
     displayName: Build and upload statics
     jobs:
       - job: build
