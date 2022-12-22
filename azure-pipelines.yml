@@ -94,7 +94,7 @@ stages:
               bucketName: 'dev-mutte0-idp'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(Build.SourceBranchName)'
+              targetFolder: '$(BRANCH_NAME)'
               filesAcl: 'public-read'
       - job: upload_static_files_dev
         dependsOn: build
@@ -115,7 +115,7 @@ stages:
               bucketName: 'dev-mutte0-idp-dev'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(Build.SourceBranchName)'
+              targetFolder: '$(BRANCH_NAME)'
               filesAcl: 'public-read'
 
   - stage: deploy_dev
