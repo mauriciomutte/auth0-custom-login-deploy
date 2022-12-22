@@ -41,6 +41,9 @@ stages:
           - script: yarn lint
             displayName: 'Run lint'
 
+          - script: yarn test
+            displayName: 'Run test'
+
   - stage: build_and_upload
     condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: Build and upload statics
