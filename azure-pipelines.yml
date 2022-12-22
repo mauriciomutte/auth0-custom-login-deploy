@@ -30,7 +30,7 @@ variables:
 
 stages:
   - stage: lint_and_tests
-    condition: eq(BRANCH_NAME, 'PullRequest')
+    condition: eq(variables['Build.Reason'], 'PullRequest')
     displayName: Lint, tests and code quality
     jobs:
       - job: build
@@ -53,7 +53,7 @@ stages:
             displayName: 'Run test'
 
   - stage: build_and_upload
-    condition: ne(BRANCH_NAME, 'PullRequest')
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     displayName: Build and upload statics
     jobs:
       - job: build
@@ -82,7 +82,7 @@ stages:
       - job: upload_static_files_prd
         displayName: Upload static files in PROD
         dependsOn: build
-        condition: contains(variables['BRANCH_NAME'], 'main')
+        condition: contains(variables['Build.SourceBranchName'], 'main')
         steps:
           - checkout: none
           - download: current
@@ -94,15 +94,15 @@ stages:
               bucketName: 'dev-mutte0-idp'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(BRANCH_NAME)'
+              targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
       - job: upload_static_files_dev
         dependsOn: build
         displayName: Upload static files in DEV
         condition: |
           or(
-            contains(variables['BRANCH_NAME'], 'qa'),
-            contains(variables['BRANCH_NAME'], 'develop')
+            contains(variables['Build.SourceBranchName'], 'qa'),
+            contains(variables['Build.SourceBranchName'], 'develop')
           )
         steps:
           - checkout: none
@@ -115,7 +115,7 @@ stages:
               bucketName: 'dev-mutte0-idp-dev'
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
-              targetFolder: '$(BRANCH_NAME)'
+              targetFolder: '$(Build.SourceBranchName)'
               filesAcl: 'public-read'
 
   - stage: deploy_dev
