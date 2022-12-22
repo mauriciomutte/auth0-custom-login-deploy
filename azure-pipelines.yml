@@ -9,6 +9,14 @@ trigger:
       - main
       - develop
       - release/qa
+  paths:
+    include:
+      # Folders
+      - src
+      - public
+      # Files
+      - package.json
+      - next.config.js
 
 pr:
   - main
