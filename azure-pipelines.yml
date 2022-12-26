@@ -116,7 +116,6 @@ stages:
               sourceFolder: '$(Pipeline.Workspace)/drop/out'
               globExpressions: '_next/**'
               targetFolder: '$(BRANCH_NAME)'
-              filesAcl: 'public-read'
 
   - stage: deploy_dev
     displayName: Deploy to Auth0 DEV
