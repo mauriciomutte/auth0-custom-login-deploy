@@ -1,4 +1,0 @@
-pages:
-  - name: login
-    enabled: true
-    html: ./out/login.html
