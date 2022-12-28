@@ -1,8 +1,3 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
   - main
 
@@ -17,6 +12,14 @@ steps:
 
   - script: |
       cd auth0-custom-login-deploy
-      yarn install
+      yarn --frozen-lockfile
       yarn build
     displayName: 'Yarn install and build'
+
+  - task: S3Upload@1
+    inputs:
+      awsCredentials: 'YOUR_AWS_CONNECTION'
+      regionName: 'us-east-1'
+      bucketName: 'auth0-custom-login-bucket'
+      sourceFolder: '$(Build.SourcesDirectory)/out'
+      globExpressions: '_next/**'
