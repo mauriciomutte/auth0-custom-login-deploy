@@ -10,10 +10,12 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+
+
   - task: NodeTool@0
+    displayName: 'Use Node 16.x'
     inputs:
-      versionSpec: '10.x'
-    displayName: 'Install Node.js'
+      versionSpec: '16.x'
 
   - script: |
       cd auth0-custom-login-deploy
