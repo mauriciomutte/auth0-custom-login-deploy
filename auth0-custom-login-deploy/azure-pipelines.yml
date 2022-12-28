@@ -4,18 +4,19 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    yarn install
-    yarn build
-  displayName: 'Yarn install and build'
+  - script: |
+      cd auth0-custom-login-deploy
+      yarn install
+      yarn build
+    displayName: 'Yarn install and build'
