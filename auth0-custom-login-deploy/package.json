@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:auth0": "a0deploy import --input_file ./tenant.yaml"
   },
   "dependencies": {
     "@next/font": "13.1.1",
