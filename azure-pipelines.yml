@@ -14,7 +14,6 @@ steps:
       versionSpec: '16.x'
 
   - script: |
-      cd auth0-custom-login-deploy
       yarn --frozen-lockfile
       yarn build
     displayName: 'Yarn install and build'
