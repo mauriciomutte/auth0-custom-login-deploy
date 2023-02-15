@@ -1,2 +1,1 @@
-# pipeline-playground
-🛝 A CI/CD pipeline playground
+# auth0-custom-login-deploy
