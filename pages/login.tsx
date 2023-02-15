@@ -22,7 +22,7 @@ export default function Login() {
           <h1 className={inter.className}>Auth0 custom login deploy</h1>
           <div className={styles.content}>
             <p className={inter.className}>
-              Create a pipeline to automate Auth0 deploy
+              Using Azure Pipeline to automate Auth0 custom login deploy
             </p>
           </div>
         </div>
